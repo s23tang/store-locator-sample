@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization"></script>
+        <script>
+            /*
+             *  Globals declared here
+             *  {Object} map - the Google map object, that will be displayed
+             *  {Object} heatMap - the Google Heatmap layer, to show heat map
+             *  [Objects] markerArray - array of Google Marker objects, to track all markers (for toggling)
+             *  [Objects] locations - array of JSON objects containg data of every store
+             *  {Object} selectedMarker - for holding the currently selected location Marker object
+             */
+            var map, heatMap, markerArray = [], selectedMarker = null;
+            var locations = <%- JSON.stringify(locations) %>;
+        </script>
+        <script src="/js/index.map.js"></script>
+    </head>
+    <body>
+        <!-- View for the Google Maps Platform -->
+        <div id="map"></div>
+
+        <!-- View for controls and information display-->
+        <div id="nav-overlay">
+
+            <!-- Title and mode selector -->
+            <div class="header">
+                <h2>Selected Store Information</h2>
+                <div class="mode-select">
+                    <a id="standard-select" class="selected">Standard</a>
+                    <a id="heatmap-select">Heat Map</a>
+                </div>
+            </div>
+
+            <!-- Standard mode content (store information) -->
+            <!-- populated by visible and hidden (seen when content expanded) labels -->
+            <div class="content">
+                <% for ( var i = 0; i < shownInfo.length; i++ ) { %>
+                    <% if ( i > 0 ) { %>
+                        <div class="hidden additional-content">
+                    <% } %>
+
+                    <% for ( var j = 0; j < shownInfo[i].length; j++ ) { %>
+                        <div class="content-block">
+                            <div class="content-label">
+                                <span><%= shownInfo[i][j] %> :</span>
+                            </div>
+                            <div class="content-info">
+                                <span class="<%- shownInfo[i][j].replace(/\s+/g, '-').toLowerCase() %>">n/a</span>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <% if ( i > 0 ) { %>
+                        </div>
+                    <% } %>
+                <% } %>
+                <a id="expand-link">Show more...</a>
+
+                <div class="return-container">
+                    <a id="return-link">→</a>
+                    <div class="tooltip">
+                        <p class="tooltip-content">Return to selected store</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap mode mode content -->
+            <div class="heatmap-content">
+                <p>Currently displaying heat map of stores</p>
+                <p>The heat map is a colored rendering in relation to the intensity of the geographical store locations</p>
+            </div>
+
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="/js/index.setup.js"></script>
+    </body>
+</html>
