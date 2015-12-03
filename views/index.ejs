@@ -4,19 +4,7 @@
         <title><%= title %></title>
         <link rel="stylesheet" type="text/css" href="/css/style.css">
         <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization"></script>
-        <script>
-            /*
-             *  Globals declared here
-             *  {Object} map - the Google map object, that will be displayed
-             *  {Object} heatMap - the Google Heatmap layer, to show heat map
-             *  [Objects] markerArray - array of Google Marker objects, to track all markers (for toggling)
-             *  [Objects] locations - array of JSON objects containg data of every store
-             *  {Object} selectedMarker - for holding the currently selected location Marker object
-             */
-            var map, heatMap, markerArray = [], selectedMarker = null;
-            var locations = <%- JSON.stringify(locations) %>;
-        </script>
-        <script src="/js/index.map.js"></script>
+        <script src="/libs/index.map.js"></script>
     </head>
     <body>
         <!-- View for the Google Maps Platform -->
@@ -76,6 +64,6 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <script src="/js/index.setup.js"></script>
+        <script src="/libs/index.nav.js"></script>
     </body>
 </html>

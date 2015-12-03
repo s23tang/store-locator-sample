@@ -7,8 +7,8 @@ var express = require('express'),
 // Load express configuration
 require(__dirname + '/config/env.js')(express, app);
 
-// Load routes
-require(__dirname + '/routes')(app);
+// Load controllers
+app.use(require(__dirname + '/controllers'));
 
 // Start the server
 app.listen(3000);
