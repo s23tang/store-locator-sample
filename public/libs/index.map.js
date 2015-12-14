@@ -1,3 +1,8 @@
+/* jQuery Tiny Pub/Sub - v0.7 - 10/27/2011
+ * http://benalman.com/
+ * Copyright (c) 2011 "Cowboy" Ben Alman; Licensed MIT, GPL */
+(function(a){var b=a({});a.subscribe=function(){b.on.apply(b,arguments)},a.unsubscribe=function(){b.off.apply(b,arguments)},a.publish=function(){b.trigger.apply(b,arguments)}})(jQuery)
+
 /*
  *  @desc   Create the map object, rendered behind navigation overlay
  *  @param  undefined
@@ -56,6 +61,28 @@ var Map = (function () {
         heatmap : _heatMapModeSwitch
     };
 
+    // Update the navigation menu info with the data provided by info object
+    var _updateNavInfo = function (event, info) {
+        var $content = $('.content');
+
+         // Update the displayed info with the selected store (matches each field)
+        $content.find('.store-id').text(info.id);
+        $content.find('.city').text(info.city);
+        $content.find('.country').text(info.country);
+        $content.find('.total-visitors').text(info.total_visitors);
+        $content.find('.visit-duration').text(info.visit_duration_keep_fraction);
+        $content.find('.start-of-day').text(info.start_of_day);
+        $content.find('.tz').text(info.tz);
+        $content.find('.tz-index').text(info.tz_index);
+        $content.find('.rss-campaign').text(info.rss_campaign);
+        $content.find('.campaign-duration').text(info.campaign_duration);
+        $content.find('.rss-walkby').text(info.rss_walkby);
+        $content.find('.rss-range').text(info.rss_range);
+    };
+
+    // Subscribe to /nav/info topic, update the navigation menu on data receive
+    $.subscribe("/nav/info", _updateNavInfo);
+
     /*
      *  @desc   Renders the markers for the retrieved location data, and for heatmap
      *  @param  undefined
@@ -87,23 +114,8 @@ var Map = (function () {
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
                 return function() {
 
-                    // Uses jQuery (loaded after) to select area to display to
-                    var $content = $('.content'),
-                            info = _locations[i];    //Selected store info
-
-                    // Update the displayed info with the selected store (matches each field)
-                    $content.find('.store-id').text(info.id);
-                    $content.find('.city').text(info.city);
-                    $content.find('.country').text(info.country);
-                    $content.find('.total-visitors').text(info.total_visitors);
-                    $content.find('.visit-duration').text(info.visit_duration_keep_fraction);
-                    $content.find('.start-of-day').text(info.start_of_day);
-                    $content.find('.tz').text(info.tz);
-                    $content.find('.tz-index').text(info.tz_index);
-                    $content.find('.rss-campaign').text(info.rss_campaign);
-                    $content.find('.campaign-duration').text(info.campaign_duration);
-                    $content.find('.rss-walkby').text(info.rss_walkby);
-                    $content.find('.rss-range').text(info.rss_range);
+                    // Let the subscriber know of the data to update the view
+                    $.publish('/nav/info', [_locations[i]]);
 
                     // Move map to center on the selected marker
                     _map.setCenter(marker.getPosition());
